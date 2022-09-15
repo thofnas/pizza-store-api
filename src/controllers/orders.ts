@@ -21,11 +21,11 @@ export async function createOrderController(this: any, req: any, res: any) {
   let totalPrice = 0
   const order = new Orders({
     foods: res.foods.map((food: any) => {
-      totalPrice += food.price
+      food.price !== undefined ? (totalPrice += food.price) : (totalPrice += 0)
       return {
         id: food.id,
         name: food.name,
-        price: food.price
+        price: food.price || 0
       }
     }),
     order_price: totalPrice,

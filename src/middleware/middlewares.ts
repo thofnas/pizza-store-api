@@ -79,17 +79,12 @@ export async function getFood(req: Request, res: any, next: NextFunction) {
 export async function getFoodsByName(req: any, res: any, next: NextFunction) {
   let foods
 
-  let foodNames = req.body.foods.map((food: { name: String }) => {
-    return food.name
-  })
-
   try {
     foods = await Foods.find({
       name: {
         $in: req.body.foods
       }
     })
-    console.log(foods)
 
     if (foods === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_FOOD })

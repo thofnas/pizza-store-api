@@ -5,6 +5,7 @@ import fileUpload from 'express-fileupload'
 import cookieParser from 'cookie-parser'
 import path from 'path'
 import mongoose from 'mongoose'
+import http from 'http'
 
 import foodsRoute from './routes/foods'
 import foodTypesRouter from './routes/foodtypes'
@@ -61,6 +62,8 @@ app.use('/foodtypes', foodTypesRouter)
 app.use('/auth', authRouter)
 app.use('/orders', OrdersRouter)
 
-app.listen(PORT, () => {
+const server = http.createServer(app)
+
+server.listen(PORT, () => {
   console.log('Server Running On Port ' + PORT)
 })
