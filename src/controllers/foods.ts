@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import path from 'path'
 import mongoose from 'mongoose'
 import Foods from '../models/foods'
-import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import sharp from 'sharp'
 
 import { s3, BUCKET_NAME } from '../index'
@@ -15,7 +15,7 @@ const resizeImageBuffer = async (buffer: string | Buffer) => {
     .resize({
       height: 512,
       width: 512,
-      fit: 'cover',
+      fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 }
     })
     .toBuffer()
@@ -118,7 +118,12 @@ export async function patchFoodController(req: any, res: any) {
 }
 
 export async function deleteFoodController(req: Request, res: any) {
+  const command = new DeleteObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: res.food.image_path
+  })
   try {
+    await s3.send(command)
     await res.food.remove()
     res.json({ message: MESSAGE_DELETED })
   } catch (e: any) {
