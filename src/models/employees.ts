@@ -3,8 +3,6 @@ import uniqueValidator from 'mongoose-unique-validator'
 
 const Schema = mongoose.Schema
 
-const ROLES = ['common', 'moderator', 'employeer', 'seo']
-const DEFAULT_ROLE = 'common'
 const NAME_SURNAME_LENGTH = { min: 2, max: 30 }
 
 const EmployeesSchema = new Schema({
@@ -25,7 +23,6 @@ const EmployeesSchema = new Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: Number, required: true, unique: true },
-  role: { type: String, required: true, default: DEFAULT_ROLE, enum: ROLES },
   home_address: { type: String, required: true },
   created_at: { type: Date, default: Date.now, required: true },
   //created_by: { type: Schema.Types.ObjectId, ref: 'Employees', required: true },

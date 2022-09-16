@@ -1,12 +1,20 @@
 import { Request, Response } from 'express'
 import path from 'path'
-import { unlinkSync } from 'fs'
 import mongoose from 'mongoose'
 import Foods from '../models/foods'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import sharp from 'sharp'
+
+import { s3, BUCKET_NAME } from '../index'
 
 const MESSAGE_DELETED = 'Deleted Successfully.'
-const FOLDER_PATH = path.join(__dirname, '..', 'public', 'foods')
-const FOOD_IMAGES_PATH = path.join(FOLDER_PATH, 'images')
+const MESSAGE_WRONG_EXTENTION = 'Image extension should be .png'
+
+const resizeImageBuffer = async (buffer: string | Buffer) => {
+  return await sharp(buffer)
+    .resize({ height: 512, width: 512, fit: 'contain' })
+    .toBuffer()
+}
 
 export async function getAllFoodController(req: Request, res: Response) {
   try {
@@ -24,12 +32,16 @@ export async function getOneFoodController(req: Request, res: any) {
 export async function createFoodController(req: any, res: any) {
   const { name, title, nutritions, calories, fat, sugar, salt, price } =
     req.body
-  const { image } = req.files || {}
+  const image = req.file || undefined
+  const buffer = await resizeImageBuffer(image.buffer)
+
+  if (path.extname(image.originalname) !== 'png')
+    return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   const objectId = new mongoose.Types.ObjectId()
   let fileName = ''
   if (image !== undefined) {
-    fileName = `${objectId}${path.extname(image.name)}`
+    fileName = `${objectId}.png`
   }
 
   const food = new Foods({
@@ -50,7 +62,13 @@ export async function createFoodController(req: any, res: any) {
 
   try {
     const newFood = await food.save()
-    if (image !== undefined) image.mv(path.resolve(FOOD_IMAGES_PATH, fileName))
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileName,
+      Body: buffer,
+      ContentType: req.file.mimetype
+    })
+    s3.send(command)
     res.status(201).json(newFood)
   } catch (e: any) {
     res.status(400).json({ message: e.message })
@@ -59,7 +77,10 @@ export async function createFoodController(req: any, res: any) {
 
 export async function patchFoodController(req: any, res: any) {
   const { name, title, cost, type, calories, fat, sugar, salt } = req.body
-  const { image } = req.files || {}
+  const image = req.file || undefined
+
+  if (path.extname(image.originalname) !== 'png')
+    return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   res.food.last_update = new Date()
   if (name !== null || title !== null) res.food.name = name || title
@@ -70,10 +91,15 @@ export async function patchFoodController(req: any, res: any) {
   if (sugar !== null) res.food.nutritions.sugar = sugar
   if (salt !== null) res.food.nutritions.salt = salt
   if (image !== undefined) {
-    const fileName = `${res.food._id}${path.extname(image.name)}`
-    unlinkSync(path.resolve(FOOD_IMAGES_PATH, res.food.image_path))
-    res.food.image_path = fileName
-    image.mv(path.resolve(FOOD_IMAGES_PATH, fileName))
+    const fileName = `${res.food._id}.png`
+    const buffer = await resizeImageBuffer(req.file.buffer)
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileName,
+      Body: buffer,
+      ContentType: req.file.mimetype
+    })
+    s3.send(command)
   }
   try {
     const updatedFood = await res.food.save()
@@ -86,7 +112,6 @@ export async function patchFoodController(req: any, res: any) {
 export async function deleteFoodController(req: Request, res: any) {
   try {
     await res.food.remove()
-    unlinkSync(path.resolve(FOOD_IMAGES_PATH, res.food.image_path))
     res.json({ message: MESSAGE_DELETED })
   } catch (e: any) {
     res.status(500).json({ message: e.message })

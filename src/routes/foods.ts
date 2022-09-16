@@ -1,4 +1,6 @@
 import express from 'express'
+import multer from 'multer'
+
 import {
   cookieJwtAuthentication,
   getFood,
@@ -13,6 +15,11 @@ import {
 } from '../controllers/foods'
 
 const foodsRouter = express.Router()
+const storage = multer.memoryStorage()
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 } // 1024bytes * 1024bytes = 1 megabyte
+})
 
 //Getting all
 foodsRouter.get('/', getAllFoodController)
@@ -24,6 +31,7 @@ foodsRouter.get('/:id', getFood, getOneFoodController)
 foodsRouter.post(
   '/',
   //cookieJwtAuthentication,
+  upload.single('image'),
   getFoodTypeByName,
   createFoodController
 )
@@ -32,6 +40,7 @@ foodsRouter.post(
 foodsRouter.patch(
   '/:id',
   //cookieJwtAuthentication,
+  upload.single('image'),
   getFood,
   getFoodTypeByName,
   patchFoodController

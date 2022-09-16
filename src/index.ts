@@ -1,11 +1,10 @@
 require('dotenv').config()
 import express from 'express'
 import cors from 'cors'
-import fileUpload from 'express-fileupload'
 import cookieParser from 'cookie-parser'
 import path from 'path'
 import mongoose from 'mongoose'
-import http from 'http'
+import { S3Client } from '@aws-sdk/client-s3'
 
 import foodsRoute from './routes/foods'
 import foodTypesRouter from './routes/foodtypes'
@@ -14,9 +13,22 @@ import OrdersRouter from './routes/orders'
 import Employees from './models/employees'
 
 const app = express()
+
+const BUCKET_NAME = process.env.BUCKET_NAME || ''
+const BUCKET_REGION = process.env.BUCKET_REGION || ''
+const ACCESS_KEY = process.env.ACCESS_KEY || ''
+const ACCESS_KEY_SECRET = process.env.ACCESS_KEY_SECRET || ''
 const PORT = process.env.PORT || 8080
 const DATABASE_URL: string =
   process.env.DATABASE_URL || 'mongodb://localhost/pizza-store'
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: ACCESS_KEY_SECRET
+  },
+  region: BUCKET_REGION
+})
 const db = mongoose.connection
 
 mongoose.connect(DATABASE_URL)
@@ -37,7 +49,6 @@ db.once('open', () => {
       new Employees({
         name: { first: 'Moderator' },
         email: 'admin@a',
-        role: 'moderator',
         password: 'admin@a'
       }).save({ validateBeforeSave: false })
     }
@@ -50,20 +61,13 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
 
-//enables file upload and form data parsing
-app.use(
-  fileUpload({
-    limits: { fileSize: 1048576 } // 1048576 bytes = 1 megabyte
-  })
-)
-
 app.use('/foods', foodsRoute)
 app.use('/foodtypes', foodTypesRouter)
 app.use('/auth', authRouter)
 app.use('/orders', OrdersRouter)
 
-const server = http.createServer(app)
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log('Server Running On Port ' + PORT)
 })
+
+export { s3, BUCKET_NAME }
