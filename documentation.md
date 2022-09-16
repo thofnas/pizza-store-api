@@ -35,9 +35,7 @@ All requires to be logged in
 * `/orders/:id`
 
 ### Images
-
-They stored in *public* folder
-* `/foods/images/:imagepath`
+*soon*
 
 ## For post/patch requests
 ### Foods
@@ -46,7 +44,7 @@ They stored in *public* folder
 | name `string`     | required(unique)  |
 | price `number`    | required          |
 | type `objectId`   | required          |
-| image `file`      | required          |
+| image `png`       | required          |
 | calories `number` | required          |
 | fat `number`      | required          |
 | sugar `number`    | required          |
