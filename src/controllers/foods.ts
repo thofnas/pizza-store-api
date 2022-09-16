@@ -35,7 +35,7 @@ export async function createFoodController(req: any, res: any) {
   const image = req.file || undefined
   const buffer = await resizeImageBuffer(image.buffer)
 
-  if (path.extname(image.originalname) !== 'png')
+  if (path.extname(image.originalname) !== '.png')
     return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   const objectId = new mongoose.Types.ObjectId()
@@ -79,7 +79,7 @@ export async function patchFoodController(req: any, res: any) {
   const { name, title, cost, type, calories, fat, sugar, salt } = req.body
   const image = req.file || undefined
 
-  if (path.extname(image.originalname) !== 'png')
+  if (path.extname(image.originalname) !== '.png')
     return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   res.food.last_update = new Date()
