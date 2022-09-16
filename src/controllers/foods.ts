@@ -12,7 +12,12 @@ const MESSAGE_WRONG_EXTENTION = 'Image extension should be .png'
 
 const resizeImageBuffer = async (buffer: string | Buffer) => {
   return await sharp(buffer)
-    .resize({ height: 512, width: 512, fit: 'contain' })
+    .resize({
+      height: 512,
+      width: 512,
+      fit: 'cover',
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
+    })
     .toBuffer()
 }
 
@@ -66,8 +71,10 @@ export async function createFoodController(req: any, res: any) {
       Bucket: BUCKET_NAME,
       Key: fileName,
       Body: buffer,
-      ContentType: req.file.mimetype
+      ContentType: req.file.mimetype,
+      ACL: 'public-read'
     })
+
     s3.send(command)
     res.status(201).json(newFood)
   } catch (e: any) {
@@ -97,7 +104,8 @@ export async function patchFoodController(req: any, res: any) {
       Bucket: BUCKET_NAME,
       Key: fileName,
       Body: buffer,
-      ContentType: req.file.mimetype
+      ContentType: req.file.mimetype,
+      ACL: 'public-read'
     })
     s3.send(command)
   }
