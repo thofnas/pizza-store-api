@@ -2,7 +2,6 @@ require('dotenv').config()
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import path from 'path'
 import mongoose from 'mongoose'
 import { S3Client } from '@aws-sdk/client-s3'
 
@@ -10,11 +9,8 @@ import foodsRoute from './routes/foods'
 import foodTypesRouter from './routes/foodtypes'
 import authRouter from './routes/auth'
 import OrdersRouter from './routes/orders'
-import Employees from './models/employees'
 
 const app = express()
-
-// test commit 
 
 const BUCKET_NAME = process.env.BUCKET_NAME || ''
 const BUCKET_REGION = process.env.BUCKET_REGION || ''
@@ -36,28 +32,7 @@ const db = mongoose.connection
 mongoose.connect(DATABASE_URL)
 
 db.on('error', (error) => console.log(error))
-db.once('open', () => {
-  // create an account on first launch
-  mongoose.connection.db.listCollections().toArray((err, collectionNames) => {
-    if (err) {
-      console.log(err)
-      return
-    }
 
-    if (
-      collectionNames?.find((employee) => employee.name === 'employees') ===
-      undefined
-    ) {
-      new Employees({
-        name: { first: 'Moderator' },
-        email: 'admin@a',
-        password: 'admin@a'
-      }).save({ validateBeforeSave: false })
-    }
-  })
-})
-
-app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())

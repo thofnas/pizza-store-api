@@ -3,18 +3,29 @@ import jwt from 'jsonwebtoken'
 import FoodTypes from '../models/foodtypes'
 import Foods from '../models/foods'
 import Orders from '../models/orders'
-import Employees from '../models/employees'
 
 const MESSAGE_CANNOT_FIND_TYPE = 'Cannot find food type.'
 const MESSAGE_CANNOT_FIND_FOOD = 'Cannot find food.'
 const MESSAGE_CANNOT_FIND_ORDER = 'Cannot find food type.'
-const MESSAGE_CANNOT_FIND_EMPLOYEE = 'Cannot find employee.'
 
-export async function getFoodTypeById(
+export const fixPersonName = (string: string) => {
+  return string
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+    .join(' ')
+}
+
+export const fixThingName = (string: string) => {
+  return string.replace(/\s+/g, ' ').trim().toLowerCase()
+}
+
+export const getFoodTypeById = async (
   req: Request,
   res: any,
   next: NextFunction
-) {
+) => {
   let foodType
   try {
     foodType = await FoodTypes.findById(req.params.id)
@@ -27,8 +38,13 @@ export async function getFoodTypeById(
   next()
 }
 
-export async function getOrderById(req: Request, res: any, next: NextFunction) {
+export const getOrderById = async (
+  req: Request,
+  res: any,
+  next: NextFunction
+) => {
   let order
+
   try {
     order = await Orders.findById(req.params.id)
     if (order === null)
@@ -39,19 +55,18 @@ export async function getOrderById(req: Request, res: any, next: NextFunction) {
   res.order = order
   next()
 }
-
-export async function getFoodTypeByName(
+export const getFoodTypeByName = async (
   req: any,
   res: any,
   next: NextFunction
-) {
+) => {
   let foodType
 
+  let type = fixThingName(req.params.type)
+
   try {
-    if (req.params.type) {
-      foodType = await FoodTypes.findOne({ type: req.params.type })
-    } else {
-      foodType = await FoodTypes.findOne({ type: req.body.type })
+    if (type) {
+      foodType = await FoodTypes.findOne({ type: type })
     }
     if (foodType === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
@@ -62,10 +77,17 @@ export async function getFoodTypeByName(
   next()
 }
 
-export async function getFood(req: Request, res: any, next: NextFunction) {
+export const getFoodByName = async (
+  req: Request,
+  res: any,
+  next: NextFunction
+) => {
   let food
+
   try {
-    food = await Foods.findById(req.params.id)
+    food = await Foods.findOne({
+      name: fixThingName(req.params.name)
+    })
 
     if (food === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_FOOD })
@@ -76,8 +98,16 @@ export async function getFood(req: Request, res: any, next: NextFunction) {
   next()
 }
 
-export async function getFoodsByName(req: any, res: any, next: NextFunction) {
+export const getFoodsByName = async (
+  req: any,
+  res: any,
+  next: NextFunction
+) => {
   let foods
+
+  req.body.foods = req.body.foods?.map((food: string) => {
+    return fixThingName(food)
+  })
 
   try {
     foods = await Foods.find({
@@ -95,46 +125,11 @@ export async function getFoodsByName(req: any, res: any, next: NextFunction) {
   next()
 }
 
-export async function getEmployeeByEmailAndPassword(
+export const getFoodTypesByTheirIDs = async (
   req: Request,
   res: any,
   next: NextFunction
-) {
-  let employee
-  try {
-    employee = await Employees.findOne({
-      email: req.body.email,
-      password: req.body.password
-    })
-    if (employee === null)
-      return res.status(404).json({ message: MESSAGE_CANNOT_FIND_EMPLOYEE })
-  } catch (e: any) {
-    return res.status(500).json(e)
-  }
-  res.employee = employee
-  next()
-}
-
-// used only when employee is already found
-export async function updateEmployeeLastSeen(
-  req: Request,
-  res: any,
-  next: NextFunction
-) {
-  try {
-    res.employee.last_seen = new Date()
-    await res.employee.save({ validateBeforeSave: false })
-  } catch (e: any) {
-    return res.status(500).json(e)
-  }
-  next()
-}
-
-export async function getFoodTypesByTheirIDs(
-  req: Request,
-  res: any,
-  next: NextFunction
-) {
+) => {
   let foodtypes
   try {
     foodtypes = await FoodTypes.find({
@@ -149,17 +144,20 @@ export async function getFoodTypesByTheirIDs(
   next()
 }
 
-export async function cookieJwtAuthentication(
+export const cookieJwtAuthentication = async (
   req: any,
   res: any,
   next: NextFunction
-) {
+) => {
   const token = req.cookies.token
   try {
     const decoded = jwt.verify(token, String(process.env.ACCESS_TOKEN_SECRET))
     console.log('token verified')
 
-    req.employee = decoded
+    console.log(decoded)
+
+    res.cookie('token', token, { httpOnly: true })
+
     next()
   } catch (e: any) {
     res.clearCookie('token')

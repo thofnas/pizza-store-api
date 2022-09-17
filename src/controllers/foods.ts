@@ -6,9 +6,10 @@ import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import sharp from 'sharp'
 
 import { s3, BUCKET_NAME } from '../index'
+import { fixThingName } from '../middleware/middlewares'
 
 const MESSAGE_DELETED = 'Deleted Successfully.'
-const MESSAGE_WRONG_EXTENTION = 'Image extension should be .png'
+const MESSAGE_WRONG_EXTENTION = 'Image extension should be .png.'
 
 const resizeImageBuffer = async (buffer: string | Buffer) => {
   return await sharp(buffer)
@@ -34,10 +35,22 @@ export async function getOneFoodController(req: Request, res: any) {
   res.send(res.food)
 }
 
-export async function createFoodController(req: any, res: any) {
-  const { name, title, nutritions, calories, fat, sugar, salt, price } =
-    req.body
-  const image = req.file || undefined
+export async function createFoodController(req: Request, res: any) {
+  const {
+    name,
+    description,
+    calories,
+    fat,
+    carbs,
+    proteins,
+    sugar,
+    salt,
+    price
+  } = req.body
+  const image = req.file
+
+  if (!image) return res.status(400).json('Image is required.')
+
   const buffer = await resizeImageBuffer(image.buffer)
 
   if (path.extname(image.originalname) !== '.png')
@@ -51,15 +64,18 @@ export async function createFoodController(req: any, res: any) {
 
   const food = new Foods({
     _id: objectId,
-    name: name || title,
+    name: fixThingName(name),
+    description: description,
     price,
     type: res.foodType._id,
     image_path: fileName,
     created_at: new Date(),
     last_update: new Date(),
-    nutritions: nutritions || {
+    nutritions: {
       calories,
       fat,
+      carbs,
+      proteins,
       sugar,
       salt
     }
@@ -71,7 +87,7 @@ export async function createFoodController(req: any, res: any) {
       Bucket: BUCKET_NAME,
       Key: fileName,
       Body: buffer,
-      ContentType: req.file.mimetype,
+      ContentType: req.file?.mimetype,
       ACL: 'public-read'
     })
 
@@ -83,20 +99,34 @@ export async function createFoodController(req: any, res: any) {
 }
 
 export async function patchFoodController(req: any, res: any) {
-  const { name, title, cost, type, calories, fat, sugar, salt } = req.body
-  const image = req.file || undefined
+  const {
+    name,
+    description,
+    cost,
+    type,
+    calories,
+    fat,
+    carbs,
+    proteins,
+    sugar,
+    salt
+  } = req.body
+  const image = req.file
 
-  if (path.extname(image.originalname) !== '.png')
+  if (image && path.extname(image.originalname) !== '.png')
     return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   res.food.last_update = new Date()
-  if (name !== null || title !== null) res.food.name = name || title
-  if (cost !== null) res.food.cost = cost
-  if (type !== null) res.food.type = res.foodType._id
-  if (calories !== null) res.food.nutritions.calories = calories
-  if (fat !== null) res.food.nutritions.fat = fat
-  if (sugar !== null) res.food.nutritions.sugar = sugar
-  if (salt !== null) res.food.nutritions.salt = salt
+  if (name !== undefined) res.food.name = fixThingName(name)
+  if (description !== undefined) res.food.description = description
+  if (cost !== undefined) res.food.cost = cost
+  if (type !== undefined) res.food.type = res.foodType._id
+  if (calories !== undefined) res.food.nutritions.calories = calories
+  if (fat !== undefined) res.food.nutritions.fat = fat
+  if (carbs !== undefined) res.food.nutritions.carbs = carbs
+  if (proteins !== undefined) res.food.nutritions.proteins = proteins
+  if (sugar !== undefined) res.food.nutritions.sugar = sugar
+  if (salt !== undefined) res.food.nutritions.salt = salt
   if (image !== undefined) {
     const fileName = `${res.food._id}.png`
     const buffer = await resizeImageBuffer(req.file.buffer)

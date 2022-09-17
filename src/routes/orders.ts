@@ -23,7 +23,7 @@ OrdersRouter.get(
 
 //Getting one
 OrdersRouter.get(
-  '/:',
+  '/:id',
   //cookieJwtAuthentication,
   getOrderById,
   getOneOrderController
@@ -39,15 +39,16 @@ OrdersRouter.post(
 
 //Updating one
 OrdersRouter.patch(
-  '/:',
+  '/:id',
   //cookieJwtAuthentication,
   getOrderById,
+  getFoodsByName,
   patchOrderController
 )
 
 //Deleting
 OrdersRouter.delete(
-  '/:',
+  '/:id',
   //cookieJwtAuthentication,
   getOrderById,
   deleteOrderController

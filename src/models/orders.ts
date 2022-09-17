@@ -15,15 +15,15 @@ const OrdersSchema = new Schema({
       id: { type: Schema.Types.ObjectId, ref: 'Foods', required: true },
       name: { type: String, required: true },
       // typeId: { type: Schema.Types.ObjectId, ref: 'FoodTypes', required: true },
-      size: { type: String, required: false },
+      image_path: { type: String, required: true },
       price: { type: Number, required: true }
     }
   ],
-
   order_price: { type: Number, required: true },
   customer_name: { type: String, required: true },
   phone: { type: Number, required: true },
   address: { type: String, required: true },
+  email: { type: String, required: false },
   created_at: { type: Date, default: Date.now, required: true }
 })
 

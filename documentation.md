@@ -2,11 +2,15 @@
 - "yarn build" to build index.js
 
 ## requests
+### Images
+
+* `https://pizza-store.s3.eu-central-1.amazonaws.com/:image_path`
+
 ### Get
 
-Fetch all or one by id 
-* `/foods` `/:id`
-* `/foodtypes` `/:id`
+Fetch all or one
+* `/foods` `/:name` - *name* is a string
+* `/foodtypes` `/:type` - *type* is a string
 * `/orders` `/:id` - **requires** to be logged
 
 ### Post
@@ -23,42 +27,44 @@ All requires to be logged in, except `/auth/login` and `/orders`
 ### Patch
 
 All requires to be logged in
-* `/foods/:id`
-* `/foodtypes/:id`
+* `/foods/:name`
+* `/foodtypes/:type`
 * `/orders/:id`
 
 ### Delete
 
 All requires to be logged in
-* `/foods/:id`
-* `/foodtypes/:id`
+* `/foods/:name`
+* `/foodtypes/:type`
 * `/orders/:id`
 
-### Images
-*soon*
-
-## For post/patch requests
+## For post requests
 ### Foods
-|       Data        |       State       |
-| ----------------- |:-----------------:|
-| name `string`     | required(unique)  |
-| price `number`    | required          |
-| type `objectId`   | required          |
-| image `png`       | required          |
-| calories `number` | required          |
-| fat `number`      | required          |
-| sugar `number`    | required          |
-| sugar `salt`      | required          |
+|         Data         |     Is Required     |
+| -------------------- |:-----------------:|
+| name `string`        | +(unique)  |
+| description `string` | -      |
+| price `number`       | +          |
+| type `objectId`      | +          |
+| image `png`          | +          |
+| calories `number`    | +          |
+| fat `number`         | +          |
+| carbs `number`       | +          |
+| proteins `number`    | +          |
+| sugar `number`       | +          |
 
 ### Food Types
-|       Data        |       State       |
+|       Data        |       Is Required       |
 | ----------------- |:-----------------:|
-| type `string`     | required(unique)  |
+| type `string`     | +(unique)  |
 
 ### Orders
-|       Data            |  State   | 
-| --------------------- |:--------:|
-| foods `string[]`      | required |
-| customer_name `string`| required |
-| phone `number`        | required |
-| address `string`      | required |
+|       Data            | Is Required | Post | Patch |
+| --------------------- |:-----------:|:----:|:-----:|
+| order_status `string` |      +      |  -   |   +   |
+| foods `string[]`      |      +      |  +   |   +   |
+| customer_name `string`|      +      |  +   |   +   |
+| phone `number`        |      +      |  +   |   +   |
+| address `string`      |      +      |  +   |   +   |
+| email `string`        |      -      |  +   |   +   |
+
