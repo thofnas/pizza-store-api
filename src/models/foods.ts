@@ -3,14 +3,14 @@ import uniqueValidator from 'mongoose-unique-validator'
 
 const Schema = mongoose.Schema
 
-const Nutrition = {
+const NutritionSchema = new Schema({
   calories: { type: Number, required: true },
   fat: { type: Number, required: true },
   carbs: { type: Number, required: true },
   proteins: { type: Number, required: true },
   sugar: { type: Number, required: true },
   salt: { type: Number, required: true }
-}
+})
 
 const FoodsSchema = new Schema({
   name: { type: String, required: true, unique: true },
@@ -18,7 +18,7 @@ const FoodsSchema = new Schema({
   price: { type: Number, required: true, min: [0.1, 'Number is too low.'] },
   type: { type: Schema.Types.ObjectId, ref: 'FoodTypes', required: true },
   image_path: { type: String, required: true, unique: true },
-  nutrition: Nutrition,
+  nutrition: NutritionSchema,
   created_at: { type: Date, default: Date.now, required: true },
   last_update: { type: Date, default: Date.now, required: true }
 }).plugin(uniqueValidator, { message: '{VALUE} already exists.' })

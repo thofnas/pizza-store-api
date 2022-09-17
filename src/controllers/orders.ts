@@ -5,8 +5,12 @@ import Orders from '../models/orders'
 const MESSAGE_DELETED = 'Deleted Successfully.'
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
+  const { page = 1, limit = 20 } = req.query
+
   try {
     const order = await Orders.find()
+      .skip(Number(page) * Number(limit) - Number(limit))
+      .limit(Number(limit))
     res.json(order)
   } catch (e) {
     res.status(500).json(e)

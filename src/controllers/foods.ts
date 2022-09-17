@@ -23,8 +23,12 @@ const resizeImageBuffer = async (buffer: string | Buffer) => {
 }
 
 export async function getAllFoodController(req: Request, res: Response) {
+  const { page = 1, limit = 20 } = req.query
+
   try {
     const foods = await Foods.find()
+      .skip(Number(page) * Number(limit) - Number(limit))
+      .limit(Number(limit))
     res.json(foods)
   } catch (e: any) {
     res.status(500).json({ message: e.message })
@@ -71,7 +75,7 @@ export async function createFoodController(req: Request, res: any) {
     image_path: fileName,
     created_at: new Date(),
     last_update: new Date(),
-    nutritions: {
+    nutrition: {
       calories,
       fat,
       carbs,
@@ -121,12 +125,12 @@ export async function patchFoodController(req: any, res: any) {
   if (description !== undefined) res.food.description = description
   if (cost !== undefined) res.food.cost = cost
   if (type !== undefined) res.food.type = res.foodType._id
-  if (calories !== undefined) res.food.nutritions.calories = calories
-  if (fat !== undefined) res.food.nutritions.fat = fat
-  if (carbs !== undefined) res.food.nutritions.carbs = carbs
-  if (proteins !== undefined) res.food.nutritions.proteins = proteins
-  if (sugar !== undefined) res.food.nutritions.sugar = sugar
-  if (salt !== undefined) res.food.nutritions.salt = salt
+  if (calories !== undefined) res.food.nutrition.calories = calories
+  if (fat !== undefined) res.food.nutrition.fat = fat
+  if (carbs !== undefined) res.food.nutrition.carbs = carbs
+  if (proteins !== undefined) res.food.nutrition.proteins = proteins
+  if (sugar !== undefined) res.food.nutrition.sugar = sugar
+  if (salt !== undefined) res.food.nutrition.salt = salt
   if (image !== undefined) {
     const fileName = `${res.food._id}.png`
     const buffer = await resizeImageBuffer(req.file.buffer)

@@ -10,7 +10,7 @@ const MESSAGE_CANNOT_FIND_ORDER = 'Cannot find food type.'
 
 export const fixPersonName = (string: string) => {
   return string
-    .replace(/\s+/g, ' ')
+    ?.replace(/\s+/g, ' ')
     .trim()
     .split(' ')
     .map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
@@ -18,7 +18,7 @@ export const fixPersonName = (string: string) => {
 }
 
 export const fixThingName = (string: string) => {
-  return string.replace(/\s+/g, ' ').trim().toLowerCase()
+  return string?.replace(/\s+/g, ' ').trim().toLowerCase()
 }
 
 export const getFoodTypeById = async (
@@ -62,7 +62,7 @@ export const getFoodTypeByName = async (
 ) => {
   let foodType
 
-  let type = fixThingName(req.params.type)
+  let type = fixThingName(req.body.type)
 
   try {
     if (type) {

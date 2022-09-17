@@ -8,10 +8,14 @@
 
 ### Get
 
-Fetch all or one
-* `/foods` `/:name` - *name* is a string
-* `/foodtypes` `/:type` - *type* is a string
-* `/orders` `/:id` - **requires** to be logged
+* `/foods` - fetch all
+  * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
+  * `/:name` - Fetch one by it's name. *name* is a string.
+* `/foodtypes` - all types
+  * `/:type` - one. *type* is a string
+* `/orders` - all orders
+  * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
+  * `/:id` - search by order id. **requires** to be logged
 
 ### Post
 
