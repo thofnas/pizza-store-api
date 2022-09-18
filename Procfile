@@ -1,2 +1,1 @@
-worker: yarn start
-web:node index.ts
+web:yarn start
