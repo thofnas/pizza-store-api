@@ -18,7 +18,7 @@ export const fixPersonName = (string: string) => {
 }
 
 export const fixThingName = (string: string) => {
-  return string?.replace(/\s+/g, ' ').trim().toLowerCase()
+  return string?.trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
 export const getFoodTypeById = async (
@@ -60,20 +60,21 @@ export const getFoodTypeByName = async (
   res: any,
   next: NextFunction
 ) => {
-  let foodType
+  let foodtype
 
-  let type = fixThingName(req.body.type)
+  let type = req.params.type || req.body.type
 
   try {
-    if (type) {
-      foodType = await FoodTypes.findOne({ type: type })
-    }
-    if (foodType === null)
+    foodtype = await FoodTypes.findOne({ type: fixThingName(type) })
+
+    console.log(foodtype)
+
+    if (foodtype === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
   } catch (e: any) {
     return res.status(500).json(e)
   }
-  res.foodType = foodType
+  res.foodtype = foodtype
   next()
 }
 
