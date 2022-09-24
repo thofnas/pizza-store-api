@@ -67,8 +67,6 @@ export const getFoodTypeByName = async (
   try {
     foodtype = await FoodTypes.findOne({ type: fixThingName(type) })
 
-    console.log(foodtype)
-
     if (foodtype === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
   } catch (e: any) {
