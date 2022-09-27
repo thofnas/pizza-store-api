@@ -9,12 +9,12 @@
 ### Get
 
 * `/foods` - fetch all
-  * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
+  * `?page=`, `?limit=` and `?types=` are an awaliable queries. page=1 and limit=20 by default, types are/is an ids of foods
   * `/:id` - Fetch one by it's id
 * `/foodtypes` - all types
   * `/:id` 
 * `/orders` - all orders. **requires** to be logged in
-  * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
+  * `?page=` and `?limit=` are an awaliable queries. page=1 and limit=20 by default
   * `/:id` - search by order id
 
 ### Post
