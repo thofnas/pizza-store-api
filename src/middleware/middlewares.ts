@@ -6,12 +6,12 @@ import Orders from '../models/orders'
 
 const MESSAGE_CANNOT_FIND_TYPE = 'Cannot find food type.'
 const MESSAGE_CANNOT_FIND_FOOD = 'Cannot find food.'
-const MESSAGE_CANNOT_FIND_ORDER = 'Cannot find food type.'
+const MESSAGE_CANNOT_FIND_ORDER = 'Cannot find order.'
 
 export const fixPersonName = (string: string) => {
   return string
-    ?.replace(/\s+/g, ' ')
-    .trim()
+    ?.trim()
+    .replace(/\s+/g, ' ')
     .split(' ')
     .map((name) => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
     .join(' ')
@@ -21,7 +21,11 @@ export const fixThingName = (string: string) => {
   return string?.trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
-export const getFoodTypeById = async (
+export const fixText = (string: string) => {
+  return string?.trim().replace(/\s+/g, ' ')
+}
+
+export const getFoodTypeByID = async (
   req: Request,
   res: any,
   next: NextFunction
@@ -38,79 +42,48 @@ export const getFoodTypeById = async (
   next()
 }
 
-export const getOrderById = async (
+export const getOrderByID = async (
   req: Request,
   res: any,
   next: NextFunction
 ) => {
-  let order
+  let orders
 
   try {
-    order = await Orders.findById(req.params.id)
-    if (order === null)
+    orders = await Orders.findById(req.params.id)
+    if (orders === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_ORDER })
   } catch (e: any) {
     return res.status(500).json(e)
   }
-  res.order = order
-  next()
-}
-export const getFoodTypeByName = async (
-  req: any,
-  res: any,
-  next: NextFunction
-) => {
-  let foodtype
-
-  let type = req.params.type || req.body.type
-
-  try {
-    foodtype = await FoodTypes.findOne({ type: fixThingName(type) })
-
-    if (foodtype === null)
-      return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
-  } catch (e: any) {
-    return res.status(500).json(e)
-  }
-  res.foodtype = foodtype
+  res.orders = orders
   next()
 }
 
-export const getFoodByName = async (
+export const getFoodByID = async (
   req: Request,
   res: any,
   next: NextFunction
 ) => {
-  let food
-
+  let foods
   try {
-    food = await Foods.findOne({
-      name: fixThingName(req.params.name)
-    })
+    foods = await Foods.findById(req.params.id)
 
-    if (food === null)
+    if (foods === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_FOOD })
   } catch (e: any) {
     return res.status(500).json(e)
   }
-  res.food = food
+  res.foods = foods
   next()
 }
 
-export const getFoodsByName = async (
-  req: any,
-  res: any,
-  next: NextFunction
-) => {
+export const getFoodsByIDs = async (req: any, res: any, next: NextFunction) => {
   let foods
-
-  req.body.foods = req.body.foods?.map((food: string) => {
-    return fixThingName(food)
-  })
 
   try {
     foods = await Foods.find({
-      name: {
+      _id: {
         $in: req.body.foods
       }
     })
@@ -124,22 +97,22 @@ export const getFoodsByName = async (
   next()
 }
 
-export const getFoodTypesByTheirIDs = async (
+export const getFoodTypesByIDs = async (
   req: Request,
   res: any,
   next: NextFunction
 ) => {
-  let foodtypes
+  let foodTypes
   try {
-    foodtypes = await FoodTypes.find({
+    foodTypes = await FoodTypes.find({
       _id: { $in: req.body.id || req.body._id }
     })
-    if (foodtypes === null)
+    if (foodTypes === null)
       return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
   } catch (e: any) {
     return res.status(500).json(e)
   }
-  res.foodtypes = foodtypes
+  res.foodTypes = foodTypes
   next()
 }
 

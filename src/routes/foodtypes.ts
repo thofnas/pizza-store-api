@@ -1,7 +1,7 @@
 import express from 'express'
 import {
   cookieJwtAuthentication,
-  getFoodTypeByName
+  getFoodTypeByID
 } from '../middleware/middlewares'
 import {
   getAllFoodTypesController,
@@ -17,7 +17,7 @@ const foodTypesRouter = express.Router()
 foodTypesRouter.get('/', getAllFoodTypesController)
 
 //Getting one
-foodTypesRouter.get('/:type', getFoodTypeByName, getOneFoodTypeController)
+foodTypesRouter.get('/:id', getFoodTypeByID, getOneFoodTypeController)
 
 //Creating
 foodTypesRouter.post(
@@ -27,17 +27,17 @@ foodTypesRouter.post(
 
 //Updating one
 foodTypesRouter.patch(
-  '/:type',
+  '/:id',
   //cookieJwtAuthentication,
-  getFoodTypeByName,
+  getFoodTypeByID,
   patchFoodTypeController
 )
 
 //Deleting
 foodTypesRouter.delete(
-  '/:type',
+  '/:id',
   //cookieJwtAuthentication,
-  getFoodTypeByName,
+  getFoodTypeByID,
   deleteFoodTypeController
 )
 

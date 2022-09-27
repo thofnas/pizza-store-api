@@ -3,8 +3,8 @@ import multer from 'multer'
 
 import {
   cookieJwtAuthentication,
-  getFoodByName,
-  getFoodTypeByName
+  getFoodByID,
+  getFoodTypeByID
 } from '../middleware/middlewares'
 import {
   getAllFoodController,
@@ -25,32 +25,31 @@ const upload = multer({
 foodsRouter.get('/', getAllFoodController)
 
 //Getting one
-foodsRouter.get('/:name', getFoodByName, getOneFoodController)
+foodsRouter.get('/:id', getFoodByID, getOneFoodController)
 
 //Creating
 foodsRouter.post(
   '/',
   //cookieJwtAuthentication,
-  upload.single('image'),
-  getFoodTypeByName,
+  upload.single('id'),
+  getFoodTypeByID,
   createFoodController
 )
 
 //Updating one
 foodsRouter.patch(
-  '/:name',
+  '/:id',
   //cookieJwtAuthentication,
   upload.single('image'),
-  getFoodByName,
-  getFoodTypeByName,
+  getFoodByID,
   patchFoodController
 )
 
 //Deleting
 foodsRouter.delete(
-  '/:name',
+  '/:id',
   //cookieJwtAuthentication,
-  getFoodByName,
+  getFoodByID,
   deleteFoodController
 )
 

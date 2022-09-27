@@ -17,8 +17,9 @@ export const getAllFoodTypesController = async (
 }
 
 export const getOneFoodTypeController = async (req: Request, res: any) => {
-  res.send(res.foodtype)
+  res.send(res.foodType)
 }
+
 export const createFoodTypeController = async (req: any, res: any) => {
   const { type } = req.body
 
@@ -37,11 +38,11 @@ export const createFoodTypeController = async (req: any, res: any) => {
 
 export const patchFoodTypeController = async (req: any, res: any) => {
   const { type } = req.body
-  res.foodtype.type = fixThingName(type)
-  res.foodtype.last_update = new Date()
+  res.foodType.type = fixThingName(type)
+  res.foodType.last_update = new Date()
 
   try {
-    const updatedFood = await res.food.save()
+    const updatedFood = await res.foodType.save()
     res.status(201).json(updatedFood)
   } catch (e) {
     res.status(400).json({ message: e })
@@ -50,7 +51,7 @@ export const patchFoodTypeController = async (req: any, res: any) => {
 
 export const deleteFoodTypeController = async (req: Request, res: any) => {
   try {
-    await res.foodtype.remove()
+    await res.foodType.remove()
     res.json({ message: MESSAGE_DELETED, type: res.foodtype.type })
   } catch (e) {
     res.status(500).json({ message: e })

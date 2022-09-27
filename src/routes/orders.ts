@@ -1,9 +1,9 @@
 import express from 'express'
 import {
   cookieJwtAuthentication,
-  getFoodTypesByTheirIDs,
-  getOrderById,
-  getFoodsByName
+  getFoodTypesByIDs,
+  getOrderByID,
+  getFoodsByIDs
 } from '../middleware/middlewares'
 import {
   getAllOrdersController,
@@ -25,14 +25,14 @@ OrdersRouter.get(
 OrdersRouter.get(
   '/:id',
   //cookieJwtAuthentication,
-  getOrderById,
+  getOrderByID,
   getOneOrderController
 )
 
 //Creating
 OrdersRouter.post(
   '/',
-  getFoodsByName,
+  getFoodsByIDs,
   // getFoodTypesByTheirIDs,
   createOrderController
 )
@@ -41,8 +41,8 @@ OrdersRouter.post(
 OrdersRouter.patch(
   '/:id',
   //cookieJwtAuthentication,
-  getOrderById,
-  getFoodsByName,
+  getOrderByID,
+  getFoodsByIDs,
   patchOrderController
 )
 
@@ -50,7 +50,7 @@ OrdersRouter.patch(
 OrdersRouter.delete(
   '/:id',
   //cookieJwtAuthentication,
-  getOrderById,
+  getOrderByID,
   deleteOrderController
 )
 

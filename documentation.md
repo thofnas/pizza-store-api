@@ -10,36 +10,36 @@
 
 * `/foods` - fetch all
   * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
-  * `/:name` - Fetch one by it's name. *name* is a string.
+  * `/:id` - Fetch one by it's id
 * `/foodtypes` - all types
-  * `/:type` - one. *type* is a string
-* `/orders` - all orders
+  * `/:id` 
+* `/orders` - all orders. **requires** to be logged in
   * `?page=` and `?limit=` is a awaliable queries. page=1 and limit=20 by default
-  * `/:id` - search by order id. **requires** to be logged
+  * `/:id` - search by order id
 
 ### Post
 
 All requires to be logged in, except `/auth/login` and `/orders`
 * `/foods`
 * `/foodtypes`
-* `/orders` - **not requires** to be logged
+* `/orders` - **not requires** to be logged in
 * `/auth`
- * `/login` - **not requires** to be logged
+ * `/login` - **not requires** to be logged in
  * `/register` 
  * `/logout`
  
 ### Patch
 
 All requires to be logged in
-* `/foods/:name`
-* `/foodtypes/:type`
+* `/foods/:id`
+* `/foodtypes/:id`
 * `/orders/:id`
 
 ### Delete
 
 All requires to be logged in
-* `/foods/:name`
-* `/foodtypes/:type`
+* `/foods/:id`
+* `/foodtypes/:id`
 * `/orders/:id`
 
 ## For post requests
