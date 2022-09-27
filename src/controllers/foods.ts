@@ -25,17 +25,21 @@ const resizeImageBuffer = async (buffer: string | Buffer) => {
 
 export async function getAllFoodController(req: Request, res: Response) {
   const { page = 1, limit = 20, types } = req.query
+  let filter = {}
+
+  if (types !== undefined) {
+    filter = {
+      ...filter,
+      ...{
+        type: {
+          $in: types?.toString().split(',')
+        }
+      }
+    }
+  }
 
   try {
-    const foods = await Foods.find(
-      types
-        ? {
-            type: {
-              $in: types?.toString().split(',')
-            }
-          }
-        : {}
-    )
+    const foods = await Foods.find(filter)
       .skip(Number(page) * Number(limit) - Number(limit))
       .limit(Number(limit))
     res.json(foods)
