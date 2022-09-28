@@ -52,7 +52,7 @@ export const patchFoodTypeController = async (req: any, res: any) => {
 export const deleteFoodTypeController = async (req: Request, res: any) => {
   try {
     await res.foodType.remove()
-    res.json({ message: MESSAGE_DELETED, type: res.foodtype.type })
+    res.json({ message: `${res.foodType.type} - ${MESSAGE_DELETED}` })
   } catch (e) {
     res.status(500).json({ message: e })
   }

@@ -4,7 +4,8 @@ import multer from 'multer'
 import {
   cookieJwtAuthentication,
   getFoodByID,
-  getFoodTypeByID
+  getFoodTypeByID,
+  getFoodTypeByIDForFoodsPatch
 } from '../middleware/middlewares'
 import {
   getAllFoodController,
@@ -31,7 +32,7 @@ foodsRouter.get('/:id', getFoodByID, getOneFoodController)
 foodsRouter.post(
   '/',
   //cookieJwtAuthentication,
-  upload.single('id'),
+  upload.single('image'),
   getFoodTypeByID,
   createFoodController
 )
@@ -41,6 +42,7 @@ foodsRouter.patch(
   '/:id',
   //cookieJwtAuthentication,
   upload.single('image'),
+  getFoodTypeByIDForFoodsPatch,
   getFoodByID,
   patchFoodController
 )

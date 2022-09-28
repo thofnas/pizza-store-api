@@ -42,7 +42,8 @@ export async function getAllFoodController(req: Request, res: Response) {
     const foods = await Foods.find(filter)
       .skip(Number(page) * Number(limit) - Number(limit))
       .limit(Number(limit))
-    res.json(foods)
+
+    res.json(foods.length !== 0 ? foods : { message: 'No data.' })
   } catch (e: any) {
     return res.json({ message: e.message })
   }
@@ -132,8 +133,6 @@ export async function patchFoodController(req: any, res: any) {
 
   if (image && path.extname(image.originalname) !== '.png')
     return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
-
-  console.log('anmogus')
 
   res.foods.last_update = new Date()
   if (name !== undefined) res.foods.name = fixThingName(name)

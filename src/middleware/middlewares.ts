@@ -42,6 +42,25 @@ export const getFoodTypeByID = async (
   next()
 }
 
+export const getFoodTypeByIDForFoodsPatch = async (
+  req: Request,
+  res: any,
+  next: NextFunction
+) => {
+  let foodType
+  if (req.body.type === undefined) return next()
+
+  try {
+    foodType = await FoodTypes.findById(req.body.type)
+    if (foodType === null)
+      return res.status(404).json({ message: MESSAGE_CANNOT_FIND_TYPE })
+  } catch (e: any) {
+    return res.status(500).json(e)
+  }
+  res.foodType = foodType
+  next()
+}
+
 export const getOrderByID = async (
   req: Request,
   res: any,

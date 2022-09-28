@@ -47,7 +47,7 @@ All requires to be logged in
 |         Data         |     Is Required     |
 | -------------------- |:-----------------:|
 | name `string`        | +(unique)  |
-| description `string` | -      |
+| description `string` | -          |
 | price `number`       | +          |
 | type `objectId`      | +          |
 | image `png`          | +          |
@@ -55,6 +55,7 @@ All requires to be logged in
 | fat `number`         | +          |
 | carbs `number`       | +          |
 | proteins `number`    | +          |
+| salt `number`        | +          |
 | sugar `number`       | +          |
 
 ### Food Types

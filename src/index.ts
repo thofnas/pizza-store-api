@@ -43,6 +43,11 @@ app.use('/foodtypes', foodTypesRouter)
 app.use('/auth', authRouter)
 app.use('/orders', OrdersRouter)
 
+app.use((error: any, req: any, res: any, next: any) => {
+  console.log('This is the rejected field ->', error.field)
+  next(error)
+})
+
 app.listen(PORT, () => {
   console.log('Server Running On Port ' + PORT)
 })
