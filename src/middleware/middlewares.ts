@@ -42,7 +42,7 @@ export const getFoodTypeByID = async (
   next()
 }
 
-export const getFoodTypeByIDForFoodsPatch = async (
+export const getFoodTypeByIDForFoodsPatchOrPost = async (
   req: Request,
   res: any,
   next: NextFunction
