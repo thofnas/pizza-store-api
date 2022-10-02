@@ -4,7 +4,10 @@
 ## Requests
 ### Images
 
-* `https://pizza-store.s3.eu-central-1.amazonaws.com/:image_path`
+```
+https://pizza-store.s3.eu-central-1.amazonaws.com/
+``` 
+example: `https://pizza-store.s3.eu-central-1.amazonaws.com/633972831df1a16e0570f84c.png`
 
 ### Get
 
