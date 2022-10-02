@@ -9,13 +9,19 @@
 ### Get
 
 * `/foods` - fetch all
-  * `?page=`, `?limit=`, `?search=` and `?types=` are an awaliable queries. page=1 and limit=20 by default, types are/is an ids of foods. Searching is by name of food
+  * awaliable queries(all optional):
+    * `?page=` - number of page. **1** by default
+    * `?limit=` - limit of items. **20** by default
+    * `?search=` - searching by name of food
+    * `?types=` - searching by type. type is an **id**. 
   * `/:id` - Fetch one by it's id
 * `/foodtypes` - all types
-  * `/:id` 
+  * `/:id` - one by id
 * `/orders` - all orders. **requires** to be logged in
-  * `?page=` and `?limit=` are an awaliable queries. page=1 and limit=20 by default
-  * `/:id` - search by order id
+  * awaliable queries(all optional):
+    * `?page=` - number of page. **1** by default
+    * `?limit=` - limit of items. **20** by default
+  * `/:id` - one by id
 
 ### Post
 
