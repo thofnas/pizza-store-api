@@ -73,7 +73,7 @@ All requires to be logged in
 |       Data            | Is Required | Post | Patch |
 | --------------------- |:-----------:|:----:|:-----:|
 | order_status `string` |      +      |  -   |   +   |
-| foods `string[]`      |      +      |  +   |   +   |
+| foods `number[]`      |      +      |  +   |   +   |
 | customer_name `string`|      +      |  +   |   +   |
 | phone `number`        |      +      |  +   |   +   |
 | address `string`      |      +      |  +   |   +   |
