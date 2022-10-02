@@ -24,7 +24,7 @@ const resizeImageBuffer = async (buffer: string | Buffer) => {
 }
 
 export async function getAllFoodController(req: Request, res: Response) {
-  const { page = 1, limit = 20, types } = req.query
+  const { page = 1, limit = 20, types, search } = req.query
   let filter = {}
 
   if (types !== undefined) {
@@ -33,6 +33,17 @@ export async function getAllFoodController(req: Request, res: Response) {
       ...{
         type: {
           $in: types?.toString().split(',')
+        }
+      }
+    }
+  }
+
+  if (search !== undefined) {
+    filter = {
+      ...filter,
+      ...{
+        name: {
+          $regex: fixThingName(search.toString())
         }
       }
     }
@@ -67,7 +78,8 @@ export async function createFoodController(req: Request, res: any) {
   } = req.body
   const image = req.file
 
-  if (!image) return res.status(400).json('Image is required.')
+  if (image === undefined)
+    return res.status(400).json({ message: 'Image is required.' })
 
   const buffer = await resizeImageBuffer(image.buffer)
 
@@ -75,10 +87,7 @@ export async function createFoodController(req: Request, res: any) {
     return res.status(400).json({ message: MESSAGE_WRONG_EXTENTION })
 
   const objectId = new mongoose.Types.ObjectId()
-  let fileName = ''
-  if (image !== undefined) {
-    fileName = `${objectId}.png`
-  }
+  const fileName = `${objectId}.png`
 
   const food = new Foods({
     _id: objectId,
