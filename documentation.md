@@ -9,7 +9,7 @@
 ### Get
 
 * `/foods` - fetch all
-  * `?page=`, `?limit=` and `?types=` are an awaliable queries. page=1 and limit=20 by default, types are/is an ids of foods
+  * `?page=`, `?limit=`, `?search=` and `?types=` are an awaliable queries. page=1 and limit=20 by default, types are/is an ids of foods. Searching is by name of food
   * `/:id` - Fetch one by it's id
 * `/foodtypes` - all types
   * `/:id` 
