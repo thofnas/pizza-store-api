@@ -12,7 +12,7 @@ example: `https://pizza-store.s3.eu-central-1.amazonaws.com/633972831df1a16e0570
 ### Get
 
 * `/foods` - fetch all
-  * awaliable queries(all optional):
+  * avaliable queries(all optional):
     * `?page=` - number of page. **1** by default
     * `?limit=` - limit of items. **20** by default
     * `?search=` - searching by name of food
@@ -21,7 +21,7 @@ example: `https://pizza-store.s3.eu-central-1.amazonaws.com/633972831df1a16e0570
 * `/foodtypes` - all types
   * `/:id` - one by id
 * `/orders` - all orders. **requires** to be logged in
-  * awaliable queries(all optional):
+  * avaliable queries(all optional):
     * `?page=` - number of page. **1** by default
     * `?limit=` - limit of items. **20** by default
   * `/:id` - one by id
